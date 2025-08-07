@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using BackendClient;
+﻿using BackendClient;
+using CommunityToolkit.Maui;
+using CryptoMaui.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace CryptoMaui;
 public static class MauiProgram
@@ -9,6 +11,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -20,6 +23,12 @@ public static class MauiProgram
 #endif
 
         builder.Services.UseBackendClient();
+
+
+        builder.Services
+            .AddTransient<LoginViewModel>();
+
+
 
         return builder.Build();
     }

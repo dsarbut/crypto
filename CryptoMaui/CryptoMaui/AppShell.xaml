@@ -3,12 +3,16 @@
     x:Class="CryptoMaui.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CryptoMaui"
+    xmlns:views="clr-namespace:CryptoMaui.Views"
     Title="CryptoMaui">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage" />
+
+
+    <ShellContent
+        ContentTemplate="{DataTemplate views:PortfolioPage}"
+        Route="PortfolioPage"/>
 
 </Shell>

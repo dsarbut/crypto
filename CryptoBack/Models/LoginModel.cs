@@ -1,4 +1,4 @@
-﻿namespace Crypto_back.Models;
+﻿namespace CryptoBack.Models;
 
 public class LoginModel
 {

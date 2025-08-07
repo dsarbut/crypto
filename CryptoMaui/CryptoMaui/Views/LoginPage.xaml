@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels ="clr-namespace:CryptoMaui.ViewModels"
+             x:Class="CryptoMaui.Views.LoginPage"
+             x:DataType="viewModels:LoginViewModel"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled">
+
+    <ScrollView>
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Spacing="25">
+
+            <Entry VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="200" Text="{Binding Username}"  Placeholder="Username "/>
+            <Entry Placeholder="Password" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="200" Text="{Binding Password}" IsPassword="True"></Entry>
+
+            <Button
+                VerticalOptions="End"
+                HorizontalOptions="Center"
+                x:Name="CounterBtn"
+                WidthRequest="100"
+                Text="Login" 
+                Command="{Binding LogInCommand}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

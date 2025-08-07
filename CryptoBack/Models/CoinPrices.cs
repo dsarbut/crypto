@@ -1,9 +1,9 @@
-﻿using Crypto_back.Prices;
+﻿using CryptoBack.Prices;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System.Globalization;
 
-namespace Crypto_back.Models;
+namespace CryptoBack.Models;
 
 public class CoinPrices
 {

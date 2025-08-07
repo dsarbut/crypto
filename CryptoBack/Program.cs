@@ -1,7 +1,6 @@
+using CryptoBack.Models;
 
-using Crypto_back.Models;
-
-namespace Crypto_back;
+namespace CryptoBack;
 
 public class Program
 {
@@ -20,7 +19,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-       
+
 
         var app = builder.Build();
 

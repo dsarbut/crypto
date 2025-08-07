@@ -1,11 +1,7 @@
-using Crypto_back.Models;
-using Crypto_back.Prices;
-using CsvHelper;
-using CsvHelper.Configuration;
+using CryptoBack.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 
-namespace Crypto_back.Controllers;
+namespace CryptoBack.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

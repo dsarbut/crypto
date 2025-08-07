@@ -1,9 +1,7 @@
-﻿using Crypto_back.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using CryptoBack.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Crypto_back.Controllers;
+namespace CryptoBack.Controllers;
 
 
 [Route("api/[controller]")]
@@ -12,8 +10,14 @@ public class LoginController : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult Login([FromBody] LoginModel loginModel)
     {
-        return Ok();
+        if (string.Compare(loginModel.Username, "user") == 0 &&
+            string.Compare(loginModel.Password, "password") == 0)
+        {
+            return Ok();
+        }
+        return Unauthorized();
     }
 }

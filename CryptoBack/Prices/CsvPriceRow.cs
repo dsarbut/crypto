@@ -1,6 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
 
-namespace Crypto_back.Prices;
+namespace CryptoBack.Prices;
 
 public class CsvPriceRow
 {
@@ -25,6 +25,6 @@ public class CsvPriceRow
     [Index(6)]
     public decimal MarketCap { get; set; }
 
-    [Index(7)] 
+    [Index(7)]
     public DateTimeOffset TimeStamp { get; set; }
 }
