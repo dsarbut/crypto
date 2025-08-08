@@ -1,23 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CryptoMaui.Views.PortfolioPage"
-             Shell.NavBarIsVisible="False"
-             Shell.FlyoutBehavior="Disabled">
+<ContentPage
+    x:Class="CryptoMaui.Views.PortfolioPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:CryptoMaui.ViewModels"
+    xmlns:views="clr-namespace:CryptoMaui.Views"
+    x:DataType="viewModels:PortfolioViewModel"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-         
-            <Label
-                Text="Portfolio!"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
+    <Grid Margin="16" RowDefinitions="100, *">
+        <BoxView
+            Grid.Row="0"
+            BackgroundColor="AntiqueWhite"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill" />
+        <CollectionView
+            Grid.Row="1"
+            Background="WhiteSmoke"
+            CanReorderItems="False"
+            ItemSizingStrategy="MeasureAllItems"
+            ItemsSource="{Binding Investments}">
+            <CollectionView.Header>
+                <Label Text="My Portfolio" />
+            </CollectionView.Header>
+            <CollectionView.EmptyView>
+                <BoxView BackgroundColor="Bisque" HeightRequest="40" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
 
-           
-                
-        </VerticalStackLayout>
-    </ScrollView>
+                    <VerticalStackLayout x:DataType="viewModels:InvestementViewModel">
+                        <Border HeightRequest="40" StrokeShape="RoundRectangle 10,10,10,10">
+                            <Grid
+                                Margin="10,0,10,0"
+                                ColumnDefinitions="*, 100, 100, 20"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill">
+                                <Label
+                                    Grid.Column="0"
+                                    Text="{Binding Date, StringFormat='{0:MMMM} {0:yyyy}'}"
+                                    VerticalOptions="Center" />
 
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding InvestedAmmount, StringFormat='{0} $'}"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    Grid.Column="2"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} ({1})">
+                                            <Binding Path="CoinName" />
+                                            <Binding Path="CoinAmmount" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+
+                                <Image
+                                    Grid.Column="3"
+                                    Aspect="AspectFit"
+                                    Source="info.png">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ShowDetailsCommand, Source={RelativeSource AncestorType={x:Type viewModels:PortfolioViewModel}}}" CommandParameter="{Binding .}" />
+                                    </Image.GestureRecognizers>
+
+                                </Image>
+                            </Grid>
+
+                        </Border>
+
+
+                        <BoxView BackgroundColor="Transparent" HeightRequest="10" />
+                    </VerticalStackLayout>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>

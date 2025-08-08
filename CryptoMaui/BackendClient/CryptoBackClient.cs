@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace BackendClient;
 public partial class CryptoBackClient
 {
-    public CryptoBackClient() : this ("https://localhost:32775", new HttpClient())
+    public CryptoBackClient(IBackendAddressResolver backendAddressResolver) : 
+        this (backendAddressResolver.BackendAddress, new HttpClient())
     {
             
     }

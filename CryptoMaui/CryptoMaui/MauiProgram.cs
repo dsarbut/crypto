@@ -22,12 +22,14 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
-        builder.Services.UseBackendClient();
+        builder.Services
+            .AddSingleton<IBackendAddressResolver, BackendAddressResolver>()
+            .UseBackendClient();
 
 
         builder.Services
-            .AddTransient<LoginViewModel>();
-
+            .AddTransient<LoginViewModel>()
+            .AddTransient<PortfolioViewModel>();
 
 
         return builder.Build();

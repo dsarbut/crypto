@@ -1,12 +1,12 @@
-﻿using BackendClient;
-using System.Diagnostics;
+﻿using CryptoMaui.ViewModels;
 
 namespace CryptoMaui.Views;
 
 public partial class PortfolioPage : ContentPage
 {
-    public PortfolioPage()
+    public PortfolioPage(PortfolioViewModel viewModel)
     {
         InitializeComponent();
+        BindingContext = viewModel;
     }
 }

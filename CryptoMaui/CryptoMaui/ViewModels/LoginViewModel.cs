@@ -6,10 +6,10 @@ namespace CryptoMaui.ViewModels;
 public partial class LoginViewModel(CryptoBackClient cryptoBack) : ObservableObject
 {
     [ObservableProperty]
-    public partial string? Username { get; set; }
+    public partial string? Username { get; set; } = "user";
 
     [ObservableProperty]
-    public partial string? Password { get; set; }
+    public partial string? Password { get; set; } = "password";
 
 
     [RelayCommand]
@@ -36,6 +36,10 @@ public partial class LoginViewModel(CryptoBackClient cryptoBack) : ObservableObj
             }
 
             await Shell.Current.DisplayAlert(title, message, "Cancel");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Connection failed.", ex.Message, "Cancel");
         }
     }
 }

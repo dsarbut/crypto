@@ -6,13 +6,11 @@
     xmlns:views="clr-namespace:CryptoMaui.Views"
     Title="CryptoMaui">
 
-    <ShellContent
+    <!--<ShellContent
         ContentTemplate="{DataTemplate views:LoginPage}"
-        Route="LoginPage" />
+        Route="LoginPage" />-->
 
 
-    <ShellContent
-        ContentTemplate="{DataTemplate views:PortfolioPage}"
-        Route="PortfolioPage"/>
+    <ShellContent ContentTemplate="{DataTemplate views:PortfolioPage}" Route="PortfolioPage" />
 
 </Shell>
