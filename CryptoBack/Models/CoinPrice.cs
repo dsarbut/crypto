@@ -2,7 +2,7 @@
 
 public class CoinPrice
 {
-    public required DateOnly Date { get; set; }
+    public required DateTime Date { get; set; }
 
     public required decimal Price { get; set; }
 }

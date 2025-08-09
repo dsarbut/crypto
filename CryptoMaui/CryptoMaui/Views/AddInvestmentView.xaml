@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    x:Class="CryptoMaui.Views.AddInvestmentView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:CryptoMaui.ViewModels"
+    x:DataType="viewModels:AddInvestmentViewModel"
+    x:TypeArguments="x:Boolean"
+    Background="{StaticResource Primary}">
+    <Grid RowDefinitions="60, 60,  *, 44" RowSpacing="20">
+
+        <Picker
+            Title="Select a coin"
+            Grid.Row="0"
+            FontSize="14"
+            HorizontalOptions="Start"
+            ItemsSource="{Binding Coins}"
+            SelectedItem="{Binding SelectedCoin}"
+            WidthRequest="140" />
+
+        <VerticalStackLayout Grid.Row="1" HorizontalOptions="Start">
+            <Label HorizontalOptions="Fill" Text="Select StartDate" />
+            <DatePicker
+                Date="{Binding SelectedDate, Mode=TwoWay}"
+                FontSize="14"
+                MaximumDate="{Binding MaxDate}"
+                MinimumDate="{Binding MinDate}"
+                WidthRequest="140" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="2">
+            <Label FontSize="11" TextColor="{StaticResource Gray400}">
+                <Label.Text>
+                    <MultiBinding StringFormat="{}1{0} = {1:F3}$">
+                        <Binding Path="SelectedCoin" />
+                        <Binding Path="BuyingPrice" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
+            <Label HorizontalOptions="Fill" Text="Investment Ammount ($)" />
+
+            <Entry
+                FontSize="14"
+                Placeholder="Enter invested ammount"
+                Text="{Binding InvestedAmmount}" />
+
+
+            <Grid ColumnDefinitions="*,40" HorizontalOptions="Fill">
+                <Label
+                    Grid.Column="0"
+                    HorizontalOptions="Center"
+                    Text="Repeat Monthly"
+                    VerticalOptions="Center" />
+                <CheckBox
+                    Grid.Column="1"
+                    IsChecked="{Binding RepeatMonthly}"
+                    VerticalOptions="Center" />
+            </Grid>
+        </VerticalStackLayout>
+
+
+        <Button
+            Grid.Row="4"
+            Clicked="Ok_Clicked"
+            Text="Ok" />
+    </Grid>
+</toolkit:Popup>

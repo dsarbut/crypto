@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Crypto_back",
+    "title": "CryptoBack",
     "version": "1.0"
   },
   "paths": {
@@ -137,6 +137,26 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -157,7 +177,7 @@
           },
           "price": {
             "type": "number",
-            "format": "double"
+            "format": "decimal"
           }
         },
         "additionalProperties": false

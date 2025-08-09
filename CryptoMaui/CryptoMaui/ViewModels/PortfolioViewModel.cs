@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Maui;
+﻿using BackendClient;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,9 +15,11 @@ using System.Threading.Tasks;
 namespace CryptoMaui.ViewModels;
 public partial class PortfolioViewModel : ObservableObject
 {
+    private readonly CryptoBackClient cryptoBack;
 
-    public PortfolioViewModel()
+    public PortfolioViewModel(CryptoBackClient cryptoBack)
     {
+        this.cryptoBack = cryptoBack;
         Investments = [];
 
         DateOnly start = new DateOnly(2024, 01, 01);
@@ -43,6 +47,24 @@ public partial class PortfolioViewModel : ObservableObject
         if (investement != null)
         {
             await Shell.Current.ShowPopupAsync(new InvestmentDetailsView(investement));
+        }
+    }
+
+    [RelayCommand]
+    public async Task AddInvestment()
+    {
+      
+
+
+        AddInvestmentViewModel viewModel = new AddInvestmentViewModel(cryptoBack);
+        var res = await Shell.Current.ShowPopupAsync<bool>(new AddInvestmentView(viewModel));
+        if (res != null && !res.WasDismissedByTappingOutsideOfPopup && res.Result)
+        {
+
+
+
+
+            return;
         }
     }
 }

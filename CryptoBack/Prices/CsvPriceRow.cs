@@ -26,5 +26,5 @@ public class CsvPriceRow
     public decimal MarketCap { get; set; }
 
     [Index(7)]
-    public DateTimeOffset TimeStamp { get; set; }
+    public DateTime TimeStamp { get; set; }
 }

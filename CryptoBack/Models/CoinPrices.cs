@@ -53,7 +53,7 @@ public class CoinPrices
                     priceList.Add(
                         new CoinPrice()
                         {
-                            Date = DateOnly.FromDateTime(row.TimeStamp.Date),
+                            Date = row.TimeStamp,
                             Price = row.Open
                         });
                 }
