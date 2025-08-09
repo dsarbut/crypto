@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:CryptoMaui.ViewModels"
     x:DataType="viewModels:LoginViewModel"
+    Background="{x:StaticResource Primary}"
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
@@ -19,36 +20,31 @@
                 FontAttributes="Bold"
                 FontSize="32"
                 HorizontalOptions="Center"
-                Text="Welcome"
-                TextColor="#2D9CDB" />
+                Text="Welcome" />
 
             <Entry
                 Margin="0,10"
-                BackgroundColor="White"
                 HeightRequest="50"
                 Placeholder="Username"
-                PlaceholderColor="#999"
+                PlaceholderColor="{x:StaticResource Gray500}"
                 Text="{Binding Username}"
-                TextColor="#333" />
+                WidthRequest="200" />
 
             <Entry
                 Margin="0,10"
-                BackgroundColor="White"
                 HeightRequest="50"
                 IsPassword="True"
                 Placeholder="Password"
-                PlaceholderColor="#999"
+                PlaceholderColor="{x:StaticResource Gray500}"
                 Text="{Binding Password}"
-                TextColor="#333" />
+                WidthRequest="200" />
 
             <Button
-                BackgroundColor="#2D9CDB"
                 Command="{Binding LogInCommand}"
-                CornerRadius="25"
                 FontAttributes="Bold"
-                HeightRequest="50"
+                HeightRequest="40"
                 Text="Login"
-                TextColor="White" />
+                WidthRequest="120" />
 
 
         </VerticalStackLayout>
