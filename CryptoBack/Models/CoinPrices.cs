@@ -7,7 +7,7 @@ namespace CryptoBack.Models;
 
 public class CoinPrices
 {
-    public Dictionary<string, IEnumerable<CoinPrice>> priceHistoryByCurrencyId = [];
+    public Dictionary<string, IEnumerable<CoinPriceDto>> priceHistoryByCurrencyId = [];
 
     public IEnumerable<string> CoinIds => priceHistoryByCurrencyId.Keys;
 
@@ -15,7 +15,7 @@ public class CoinPrices
     public async Task LoadAsync(string csvDataDir)
     {
         var dataFiles = Directory.GetFiles(csvDataDir, "*.csv");
-        List<Task<(string, IEnumerable<CoinPrice>)>> loadTasks = [];
+        List<Task<(string, IEnumerable<CoinPriceDto>)>> loadTasks = [];
         foreach (var file in dataFiles)
             loadTasks.Add(LoadFileAsync(file));
 
@@ -27,9 +27,9 @@ public class CoinPrices
         }
     }
 
-    public static async Task<(string, IEnumerable<CoinPrice>)> LoadFileAsync(string csvFileName)
+    public static async Task<(string, IEnumerable<CoinPriceDto>)> LoadFileAsync(string csvFileName)
     {
-        List<CoinPrice> priceList = [];
+        List<CoinPriceDto> priceList = [];
 
         string coinSymbol = Path.GetFileNameWithoutExtension(csvFileName);
 
@@ -51,7 +51,7 @@ public class CoinPrices
                 await foreach (var row in rows)
                 {
                     priceList.Add(
-                        new CoinPrice()
+                        new CoinPriceDto()
                         {
                             Date = row.TimeStamp,
                             Price = row.Open

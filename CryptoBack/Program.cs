@@ -25,6 +25,10 @@ public class Program
         });
 
 
+        var connectionString = "Data Source=Investments.db";
+        builder.Services.AddSqlite<InvestmentDatabase>(connectionString);
+
+
 
         var app = builder.Build();
 

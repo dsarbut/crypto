@@ -1,16 +1,9 @@
 ﻿using BackendClient;
-using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CryptoMaui.Views;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CryptoMaui.ViewModels;
 public partial class PortfolioViewModel : ObservableObject
@@ -21,24 +14,23 @@ public partial class PortfolioViewModel : ObservableObject
     {
         this.cryptoBack = cryptoBack;
         Investments = [];
-
-        DateOnly start = new DateOnly(2024, 01, 01);
-        for (int i = 0; i < 12; i++)
-        {
-            Investments.Add(new InvestementViewModel()
-            {
-                Date = start.AddMonths(i),
-                CoinAmmount = 0.0045M,
-                CoinName = "BTC",
-                InvestedAmmount = 400,
-                ValueToday = 420,
-                ReturnOfInvestment = 20
-            });
-        }
+        SelectedCoin = "All";
+        IsCoinSelected = false;
     }
 
     [ObservableProperty]
+    public partial string? SelectedCoin { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsCoinSelected { get; set; }
+
+
+    [ObservableProperty]
     public partial ObservableCollection<InvestementViewModel> Investments { get; set; }
+
+    [ObservableProperty]
+    public partial CoinSelectionViewModel? CoinSelection { get; set; }
+
 
 
     [RelayCommand]
@@ -53,18 +45,65 @@ public partial class PortfolioViewModel : ObservableObject
     [RelayCommand]
     public async Task AddInvestment()
     {
-      
-
-
         AddInvestmentViewModel viewModel = new AddInvestmentViewModel(cryptoBack);
         var res = await Shell.Current.ShowPopupAsync<bool>(new AddInvestmentView(viewModel));
         if (res != null && !res.WasDismissedByTappingOutsideOfPopup && res.Result)
         {
+            InvestmentDto dto = new()
+            {
+                CoinAmmount = viewModel.BuyingPrice,
+                InvestmentValue = viewModel.InvestedAmmount,
+                CoinName = viewModel.SelectedCoin,
+                Date = viewModel.SelectedDate,
+                RepeatMonthly = viewModel.RepeatMonthly,
+            };
 
+            await cryptoBack.AddInvestmentAsync(dto);
 
-
+            await RefreshInvestments();
 
             return;
         }
     }
+
+
+
+
+    public async Task LoadPortfolio()
+    {
+
+        IsCoinSelected = false;
+        await RefreshInvestments();
+
+        var coinViewModelItems = Investments
+            .Select(item => item.CoinName).Distinct()
+            .Select(coin => new CoinSelectionViewModelItem()
+            {
+                Label = coin,
+                IsSelected = true,
+            });
+
+
+        CoinSelection = new CoinSelectionViewModel();
+        CoinSelection.SetItems(coinViewModelItems);
+    }
+
+    private async Task RefreshInvestments()
+    {
+        Investments.Clear();
+        var totalInvestments = await cryptoBack.GetInvestmentsAsync();
+        foreach (var investment in totalInvestments.Investments)
+        {
+            Investments.Add(new InvestementViewModel()
+            {
+                CoinAmmount = investment.CoinAmmount,
+                CoinName = investment.CoinName,
+                Date = investment.Date.Date,
+                InvestedAmmount = investment.InvestmentValue,
+                ValueToday = 0,
+                ReturnOfInvestment = 0
+            });
+        }
+    }
+
 }

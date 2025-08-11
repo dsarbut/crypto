@@ -9,7 +9,7 @@ namespace CryptoMaui.ViewModels;
 public partial class AddInvestmentViewModel : ObservableObject
 {
     private readonly CryptoBackClient cryptoBack;
-    private readonly Dictionary<string, IEnumerable<CoinPrice>> cache = [];
+    private readonly Dictionary<string, IEnumerable<CoinPriceDto>> cache = [];
 
     public AddInvestmentViewModel(CryptoBackClient cryptoBack)
     {
@@ -46,7 +46,7 @@ public partial class AddInvestmentViewModel : ObservableObject
 
     public async Task LoadData()
     {
-        var installedCoins = await cryptoBack.InstalledCoinsAsync();
+        var installedCoins = await cryptoBack.GetInstalledCoinsAsync();
         Coins = new ObservableCollection<string>(installedCoins);
         SelectedCoin = Coins.FirstOrDefault();
     }
@@ -55,7 +55,7 @@ public partial class AddInvestmentViewModel : ObservableObject
     {
         if (!string.IsNullOrEmpty(newValue) && oldValue != newValue)
         {
-            IEnumerable<CoinPrice> history = await GetPriceHistoryFor(newValue);
+            IEnumerable<CoinPriceDto> history = await GetPriceHistoryFor(newValue);
             var minDate = history.Min(price => price.Date);
             var maxDate = history.Max(price => price.Date);
             MinDate = minDate.Date;
@@ -75,9 +75,9 @@ public partial class AddInvestmentViewModel : ObservableObject
     {
         if (SelectedCoin != null)
         {
-            IEnumerable<CoinPrice> history = await GetPriceHistoryFor(SelectedCoin);
+            IEnumerable<CoinPriceDto> history = await GetPriceHistoryFor(SelectedCoin);
 
-            CoinPrice? price = await FindPrice(SelectedDate, history);
+            CoinPriceDto? price = await FindPrice(SelectedDate, history);
             if (price != null)
             {
                 BuyingPrice = price.Price;
@@ -86,20 +86,20 @@ public partial class AddInvestmentViewModel : ObservableObject
     }
 
 
-    private async Task<IEnumerable<CoinPrice>> GetPriceHistoryFor(string coin)
+    private async Task<IEnumerable<CoinPriceDto>> GetPriceHistoryFor(string coin)
     {
-        if (!cache.TryGetValue(coin, out IEnumerable<CoinPrice>? history))
+        if (!cache.TryGetValue(coin, out IEnumerable<CoinPriceDto>? history))
         {
-            history = await cryptoBack.CoinPriceAsync(coin);
+            history = await cryptoBack.GetPriceHistoryAsync(coin);
             cache[coin] = history;
         }
 
         return history;
     }
 
-    private async static Task<CoinPrice?> FindPrice(DateTime date, IEnumerable<CoinPrice> history)
+    private async static Task<CoinPriceDto?> FindPrice(DateTime date, IEnumerable<CoinPriceDto> history)
     {
-        CoinPrice? selectedPrice = history.
+        CoinPriceDto? selectedPrice = history.
             OrderByDescending(price => price.Date.UtcDateTime)
             .FirstOrDefault(price => price.Date.UtcDateTime <= date);
 

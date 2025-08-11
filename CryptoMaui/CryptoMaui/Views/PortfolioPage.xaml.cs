@@ -8,5 +8,17 @@ public partial class PortfolioPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
+
+        
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (BindingContext is PortfolioViewModel viewModel)
+        {
+            await viewModel.LoadPortfolio();
+        }
     }
 }

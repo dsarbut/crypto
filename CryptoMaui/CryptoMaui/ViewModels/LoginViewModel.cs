@@ -17,7 +17,7 @@ public partial class LoginViewModel(CryptoBackClient cryptoBack) : ObservableObj
     {
         try
         {
-            await cryptoBack.LoginAsync(new LoginModel()
+            await cryptoBack.LoginAsync(new LoginDto()
             {
                 Username = Username ?? "",
                 Password = Password ?? ""

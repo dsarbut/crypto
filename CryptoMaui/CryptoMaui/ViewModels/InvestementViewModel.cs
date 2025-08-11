@@ -2,7 +2,7 @@
 namespace CryptoMaui.ViewModels;
 public class InvestementViewModel
 {
-    public required DateOnly Date { get; set; }
+    public required DateTime Date { get; set; }
 
     public required string CoinName { get; set; }
 

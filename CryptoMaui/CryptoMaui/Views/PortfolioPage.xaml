@@ -11,22 +11,40 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
-    <Grid Margin="16" RowDefinitions="100, *">
-        <BoxView
+    <Grid Margin="16" RowDefinitions="40, 100, *">
+        <views:CoinBar
             Grid.Row="0"
-            BackgroundColor="Transparent"
-            HorizontalOptions="Fill"
-            VerticalOptions="Fill" />
-        <CollectionView
+            BindingContext="{Binding CoinSelection}"
+            HorizontalOptions="Fill" />
+
+        <Border
             Grid.Row="1"
+            Stroke="AliceBlue"
+            StrokeThickness="2">
+            <CollectionView HorizontalOptions="Center" VerticalOptions="Center">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="DCA" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Border>
+
+        <CollectionView
+            Grid.Row="2"
             CanReorderItems="False"
             ItemSizingStrategy="MeasureAllItems"
             ItemsSource="{Binding Investments}">
             <CollectionView.Header>
-                <Label Text="My Portfolio" />
+                <Label Text="Transactions :" />
             </CollectionView.Header>
             <CollectionView.EmptyView>
-                <BoxView BackgroundColor="Bisque" HeightRequest="40" />
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="No investments in your portfolio. Add an investment."
+                        VerticalOptions="Center" />
+                </VerticalStackLayout>
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
@@ -81,7 +99,7 @@
         </CollectionView>
 
         <Image
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="0,0,10,10"
             HeightRequest="60"
             HorizontalOptions="End"

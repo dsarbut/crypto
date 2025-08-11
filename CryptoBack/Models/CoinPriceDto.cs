@@ -1,6 +1,6 @@
 ﻿namespace CryptoBack.Models;
 
-public class CoinPrice
+public class CoinPriceDto
 {
     public required DateTime Date { get; set; }
 

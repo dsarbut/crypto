@@ -11,7 +11,7 @@ public class LoginController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public ActionResult Login([FromBody] LoginModel loginModel)
+    public ActionResult Login([FromBody] LoginDto loginModel)
     {
         if (string.Compare(loginModel.Username, "user") == 0 &&
             string.Compare(loginModel.Password, "password") == 0)
