@@ -7,9 +7,11 @@
     Title="CryptoMaui"
     Background="{x:StaticResource Primary}">
 
-    <!--<ShellContent ContentTemplate="{DataTemplate views:LoginPage}" Route="LoginPage" />-->
+    <!--<ShellContent ContentTemplate="{DataTemplate views:LoginPage}" Route="Login" />-->
 
 
-    <ShellContent ContentTemplate="{DataTemplate views:PortfolioPage}" Route="PortfolioPage" />
+    <ShellContent ContentTemplate="{DataTemplate views:PortfolioPage}" Route="Portfolio" />
+    <ShellContent ContentTemplate="{DataTemplate views:AddInvestmentPage}" Route="AddInvestment" />
+
 
 </Shell>

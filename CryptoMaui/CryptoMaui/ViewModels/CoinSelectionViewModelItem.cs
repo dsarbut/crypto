@@ -10,4 +10,10 @@ public partial class CoinSelectionViewModelItem : ObservableObject
 
     [ObservableProperty]
     public partial string Label { get; set; }
+
+    [ObservableProperty]
+    public partial decimal Price{ get; set; }
+
+    [ObservableProperty]
+    public partial DateTime Date { get; set; }
 }

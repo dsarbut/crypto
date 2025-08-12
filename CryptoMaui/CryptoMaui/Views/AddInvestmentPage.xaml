@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CryptoMaui.Views.AddInvestmentPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:CryptoMaui.ViewModels"
+    x:DataType="viewModels:AddInvestmentViewModel"
+    Background="{StaticResource Primary}"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False">
+    <Grid
+        Margin="16"
+        RowDefinitions="60, 60,  *, 44"
+        RowSpacing="20">
+
+        <VerticalStackLayout Grid.Row="0">
+            <Label HorizontalOptions="Fill" Text="Investment Ammount ($)" />
+            <Entry
+                FontSize="14"
+                Placeholder="Enter invested ammount"
+                Text="{Binding InvestedAmmount}" />
+        </VerticalStackLayout>
+
+
+        <VerticalStackLayout Grid.Row="1" HorizontalOptions="Start">
+            <Label HorizontalOptions="Fill" Text="Select Start Date" />
+            <DatePicker
+                Date="{Binding SelectedDate, Mode=TwoWay}"
+                FontSize="14"
+                MaximumDate="{Binding MaxDate}"
+                MinimumDate="{Binding MinDate}"
+                WidthRequest="140" />
+        </VerticalStackLayout>
+
+        <CollectionView
+            Grid.Row="2"
+            ItemSizingStrategy="MeasureAllItems"
+            ItemsSource="{Binding CoinSelection.Items}"
+            SelectionMode="None">
+            <CollectionView.Header>
+                <Label Margin="0,0,0,10" Text="Select coins:" />
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:CoinSelectionViewModelItem">
+                    <Grid ColumnDefinitions="40, 50,100,  *">
+                        <CheckBox
+                            Grid.Column="0"
+                            IsChecked="{Binding IsSelected}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Grid.Column="1"
+                            Text="{Binding Label}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Grid.Column="2"
+                            HorizontalOptions="End"
+                            Text="{Binding Price, StringFormat='{0:F3} $'}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Grid.Column="3"
+                            HorizontalOptions="End"
+                            Text="{Binding Date, StringFormat='{0: dd MMM yyyy}'}"
+                            TextColor="{StaticResource Gray300}"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="3" Text="Invest" />
+    </Grid>
+</ContentPage>

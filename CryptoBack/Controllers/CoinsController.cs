@@ -50,7 +50,7 @@ public class CoinsController : ControllerBase
                 RepeatMonthly = false //don't care now
             });
 
-        TotalInvetmentsDto rv = new TotalInvetmentsDto(investments.ToArray());
+        TotalInvetmentsDto rv = new (investments.ToArray());
         return Ok(rv);
     }
 

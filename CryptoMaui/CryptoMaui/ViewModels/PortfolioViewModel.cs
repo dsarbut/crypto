@@ -14,95 +14,76 @@ public partial class PortfolioViewModel : ObservableObject
     {
         this.cryptoBack = cryptoBack;
         Investments = [];
-        SelectedCoin = "All";
-        IsCoinSelected = false;
     }
 
-    [ObservableProperty]
-    public partial string? SelectedCoin { get; set; }
 
     [ObservableProperty]
-    public partial bool IsCoinSelected { get; set; }
-
-
-    [ObservableProperty]
-    public partial ObservableCollection<InvestementViewModel> Investments { get; set; }
-
-    [ObservableProperty]
-    public partial CoinSelectionViewModel? CoinSelection { get; set; }
-
-
-
-    [RelayCommand]
-    public async Task ShowDetails(InvestementViewModel? investement)
-    {
-        if (investement != null)
-        {
-            await Shell.Current.ShowPopupAsync(new InvestmentDetailsView(investement));
-        }
-    }
+    public partial ObservableCollection<InvestmentViewModel> Investments { get; set; }
 
     [RelayCommand]
     public async Task AddInvestment()
     {
-        AddInvestmentViewModel viewModel = new AddInvestmentViewModel(cryptoBack);
-        var res = await Shell.Current.ShowPopupAsync<bool>(new AddInvestmentView(viewModel));
-        if (res != null && !res.WasDismissedByTappingOutsideOfPopup && res.Result)
-        {
-            InvestmentDto dto = new()
-            {
-                CoinAmmount = viewModel.BuyingPrice,
-                InvestmentValue = viewModel.InvestedAmmount,
-                CoinName = viewModel.SelectedCoin,
-                Date = viewModel.SelectedDate,
-                RepeatMonthly = viewModel.RepeatMonthly,
-            };
+        await Shell.Current.GoToAsync("//AddInvestment");
+        //if (res != null && !res.WasDismissedByTappingOutsideOfPopup && res.Result)
+        //{
+        //    InvestmentDto dto = new()
+        //    {
+        //        CoinAmmount = viewModel.BuyingPrice,
+        //        InvestmentValue = viewModel.InvestedAmmount,
+        //        CoinName = viewModel.SelectedCoin,
+        //        Date = viewModel.SelectedDate,
+        //        RepeatMonthly = viewModel.RepeatMonthly,
+        //    };
 
-            await cryptoBack.AddInvestmentAsync(dto);
+        //    await cryptoBack.AddInvestmentAsync(dto);
 
-            await RefreshInvestments();
+        //    await RefreshInvestments();
 
-            return;
-        }
+        //    return;
+        //}
     }
-
-
-
 
     public async Task LoadPortfolio()
     {
 
-        IsCoinSelected = false;
         await RefreshInvestments();
-
-        var coinViewModelItems = Investments
-            .Select(item => item.CoinName).Distinct()
-            .Select(coin => new CoinSelectionViewModelItem()
-            {
-                Label = coin,
-                IsSelected = true,
-            });
-
-
-        CoinSelection = new CoinSelectionViewModel();
-        CoinSelection.SetItems(coinViewModelItems);
     }
 
     private async Task RefreshInvestments()
     {
         Investments.Clear();
         var totalInvestments = await cryptoBack.GetInvestmentsAsync();
-        foreach (var investment in totalInvestments.Investments)
+
+       
+
+        var invGroups = totalInvestments.Investments
+            .GroupBy(inv => new { inv.Date.Month, inv.Date.Year })
+            .ToDictionary(group => group.Key, group=>group.ToList());
+
+
+        foreach (var invGroup in invGroups)
         {
-            Investments.Add(new InvestementViewModel()
+            InvestmentViewModel viewModel = new()
             {
-                CoinAmmount = investment.CoinAmmount,
-                CoinName = investment.CoinName,
-                Date = investment.Date.Date,
-                InvestedAmmount = investment.InvestmentValue,
-                ValueToday = 0,
-                ReturnOfInvestment = 0
-            });
+                Month = invGroup.Key.Month,
+                Year = invGroup.Key.Year,
+
+            };
+
+            foreach (var inv in invGroup.Value)
+            {
+                viewModel.InvestedAmmount += inv.InvestmentValue;
+
+                CoinDataViewModel coinVm = new()
+                {
+                    CoinName = inv.CoinName,
+                    CoinAmmount = inv.CoinAmmount,
+                    Value = inv.InvestmentValue
+                };
+                viewModel.CoinDatas.Add(coinVm);
+            }
+
+            Investments.Add(viewModel);
         }
     }
 

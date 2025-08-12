@@ -17,18 +17,7 @@ public partial class CoinSelectionViewModel : ObservableObject
 
     public void SetItems(IEnumerable<CoinSelectionViewModelItem> items)
     {
-        List<CoinSelectionViewModelItem> itms = [];
-
-        foreach (var item in items)
-        {
-            item.IsSelected = true;
-            itms.Add(item);
-            itms.Add(item);
-            itms.Add(item);
-            itms.Add(item);
-        }
-
-        Items = itms;
+        Items = items;
         OnPropertyChanged(nameof(Items));
         OnPropertyChanged(nameof(AllItemsSelected));
     }

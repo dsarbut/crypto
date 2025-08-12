@@ -29,7 +29,8 @@ public static class MauiProgram
 
         builder.Services
             .AddTransient<LoginViewModel>()
-            .AddTransient<PortfolioViewModel>();
+            .AddTransient<PortfolioViewModel>()
+            .AddTransient<AddInvestmentViewModel>();
 
 
         return builder.Build();

@@ -1,8 +1,6 @@
 ﻿using BackendClient;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace CryptoMaui.ViewModels;
 
@@ -14,16 +12,11 @@ public partial class AddInvestmentViewModel : ObservableObject
     public AddInvestmentViewModel(CryptoBackClient cryptoBack)
     {
         this.cryptoBack = cryptoBack;
-        Coins = [];
-        MinDate = new DateTime(1970, 1, 1);
-        MaxDate = DateTime.Now;
+        MinDate = new DateTime(2024, 1, 1).Date;
+        MaxDate = DateTime.Now.Date;
+        CoinSelection = new CoinSelectionViewModel();
     }
 
-    [ObservableProperty]
-    public partial ObservableCollection<string> Coins { get; set; }
-
-    [ObservableProperty]
-    public partial string? SelectedCoin { get; set; }
 
     [ObservableProperty]
     public partial DateTime MinDate { get; set; }
@@ -34,8 +27,11 @@ public partial class AddInvestmentViewModel : ObservableObject
     [ObservableProperty]
     public partial DateTime SelectedDate { get; set; }
 
+
     [ObservableProperty]
-    public partial bool RepeatMonthly { get; set; }
+    public partial CoinSelectionViewModel CoinSelection { get; set; }
+
+
 
     [ObservableProperty]
     public partial decimal InvestedAmmount { get; set; }
@@ -47,42 +43,29 @@ public partial class AddInvestmentViewModel : ObservableObject
     public async Task LoadData()
     {
         var installedCoins = await cryptoBack.GetInstalledCoinsAsync();
-        Coins = new ObservableCollection<string>(installedCoins);
-        SelectedCoin = Coins.FirstOrDefault();
-    }
 
-    async partial void OnSelectedCoinChanged(string? oldValue, string? newValue)
-    {
-        if (!string.IsNullOrEmpty(newValue) && oldValue != newValue)
+        List<CoinSelectionViewModelItem> coinSelectionViewModelsItems = [];
+        foreach (var coin in installedCoins.Distinct())
         {
-            IEnumerable<CoinPriceDto> history = await GetPriceHistoryFor(newValue);
-            var minDate = history.Min(price => price.Date);
-            var maxDate = history.Max(price => price.Date);
-            MinDate = minDate.Date;
-            MaxDate = maxDate.Date;
-            SelectedDate = MinDate;
-            await UpdateBuyingPrice();
-        }
-    }
+            var history = await GetPriceHistoryFor(coin);
 
-    async partial void OnSelectedDateChanged(DateTime oldValue, DateTime newValue)
-    {
-        if (oldValue != newValue)
-           await UpdateBuyingPrice();
-    }
-
-    private async Task UpdateBuyingPrice()
-    {
-        if (SelectedCoin != null)
-        {
-            IEnumerable<CoinPriceDto> history = await GetPriceHistoryFor(SelectedCoin);
-
-            CoinPriceDto? price = await FindPrice(SelectedDate, history);
-            if (price != null)
+            var coinPrice = await FindPrice(SelectedDate, history);
+            if (coinPrice != null)
             {
-                BuyingPrice = price.Price;
+
+                var viewModel = new CoinSelectionViewModelItem()
+                {
+                    IsSelected = false,
+                    Label = coin,
+                    Price = coinPrice.Price,
+                    Date = coinPrice.Date.UtcDateTime
+                };
+                coinSelectionViewModelsItems.Add(viewModel);
             }
+
         }
+
+        CoinSelection.SetItems(coinSelectionViewModelsItems);
     }
 
 
@@ -100,8 +83,8 @@ public partial class AddInvestmentViewModel : ObservableObject
     private async static Task<CoinPriceDto?> FindPrice(DateTime date, IEnumerable<CoinPriceDto> history)
     {
         CoinPriceDto? selectedPrice = history.
-            OrderByDescending(price => price.Date.UtcDateTime)
-            .FirstOrDefault(price => price.Date.UtcDateTime <= date);
+            OrderByDescending(price => price.Date)
+            .LastOrDefault(price => price.Date >= date);
 
         if (selectedPrice == null)
         {
