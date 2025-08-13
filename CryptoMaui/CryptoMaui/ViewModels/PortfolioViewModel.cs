@@ -1,8 +1,6 @@
 ﻿using BackendClient;
-using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CryptoMaui.Views;
 using System.Collections.ObjectModel;
 
 namespace CryptoMaui.ViewModels;
@@ -20,27 +18,13 @@ public partial class PortfolioViewModel : ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<InvestmentViewModel> Investments { get; set; }
 
+    [ObservableProperty]
+    public partial ObservableCollection<DcaViewModel> Dcas { get; set; }
+
     [RelayCommand]
     public async Task AddInvestment()
     {
-        await Shell.Current.GoToAsync("//AddInvestment");
-        //if (res != null && !res.WasDismissedByTappingOutsideOfPopup && res.Result)
-        //{
-        //    InvestmentDto dto = new()
-        //    {
-        //        CoinAmmount = viewModel.BuyingPrice,
-        //        InvestmentValue = viewModel.InvestedAmmount,
-        //        CoinName = viewModel.SelectedCoin,
-        //        Date = viewModel.SelectedDate,
-        //        RepeatMonthly = viewModel.RepeatMonthly,
-        //    };
-
-        //    await cryptoBack.AddInvestmentAsync(dto);
-
-        //    await RefreshInvestments();
-
-        //    return;
-        //}
+        await Shell.Current.GoToAsync("AddInvestmentPage");
     }
 
     public async Task LoadPortfolio()
@@ -54,13 +38,22 @@ public partial class PortfolioViewModel : ObservableObject
         Investments.Clear();
         var totalInvestments = await cryptoBack.GetInvestmentsAsync();
 
-       
+        Dcas = [.. totalInvestments.Dcas.Select(dca => new DcaViewModel()
+        {
+            CoinName = dca.CoinName,
+            Dca = dca.Dca,
+            TotalCoin = dca.TotalCoin,
+            TotalInvestment = dca.TotalInvestment,
+            ValueToday = dca.ValueToday,
+            RoiRate = dca.Roi
+        })];
 
         var invGroups = totalInvestments.Investments
             .GroupBy(inv => new { inv.Date.Month, inv.Date.Year })
-            .ToDictionary(group => group.Key, group=>group.ToList());
+            .ToDictionary(group => group.Key, group => group.ToList());
 
 
+        List<InvestmentViewModel> viewModels = [];
         foreach (var invGroup in invGroups)
         {
             InvestmentViewModel viewModel = new()
@@ -77,14 +70,23 @@ public partial class PortfolioViewModel : ObservableObject
                 CoinDataViewModel coinVm = new()
                 {
                     CoinName = inv.CoinName,
-                    CoinAmmount = inv.CoinAmmount,
-                    Value = inv.InvestmentValue
+                    BuyingPrice = inv.CoinPrice,
+                    InvestmentValue = inv.InvestmentValue
                 };
                 viewModel.CoinDatas.Add(coinVm);
             }
 
-            Investments.Add(viewModel);
+            viewModels.Add(viewModel);
         }
+
+        var ordered = viewModels
+            .Select(vm => new { Item = vm, Date = new DateOnly(vm.Year, vm.Month, 1) })
+            .OrderBy(x => x.Date)
+            .Select(x => x.Item);
+
+        Investments = new ObservableCollection<InvestmentViewModel>(ordered);
+
+
     }
 
 }

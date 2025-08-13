@@ -9,5 +9,6 @@ public class InvestmentDatabase : DbContext
 
     }
 
+
     public DbSet<InvestmentModel> Investments { get; set; }
 }

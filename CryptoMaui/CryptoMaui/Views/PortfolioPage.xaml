@@ -11,27 +11,40 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
-    <Grid Margin="16" RowDefinitions="40, 100, *">
-        <Border
-            Grid.Row="1"
-            Stroke="{StaticResource Secondary}"
-            StrokeThickness="2">
-            <CollectionView HorizontalOptions="Center" VerticalOptions="Center">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <VerticalStackLayout>
-                            <Label Text="Crypto" />
-                            <Label Text="DCA" />
-                            <Label Text="Value" />
-                            <Label Text="ROI" />
-                        </VerticalStackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </Border>
+    <Grid Margin="16" RowDefinitions="200, *">
+
+        <CollectionView
+            Grid.Row="0"
+            Margin="0,50,0,0"
+            Background="{StaticResource Primary}"
+            HorizontalOptions="Center"
+            ItemsSource="{Binding Dcas}"
+            VerticalOptions="Center">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:DcaViewModel">
+                    <VerticalStackLayout HorizontalOptions="Fill">
+                        <Label
+                            FontSize="20"
+                            HorizontalOptions="Center"
+                            Text="{Binding CoinName}" />
+                        <Label
+                            Margin="0,0,0,10"
+                            FontSize="14"
+                            HorizontalOptions="Center"
+                            Text="{Binding TotalCoin, StringFormat='({0:F7})'}"
+                            TextColor="{x:StaticResource Gray300}" />
+                        <Label HorizontalOptions="Center" Text="{Binding Dca, StringFormat='Dca: {0:F3} $'}" />
+                        <Label HorizontalOptions="Center" Text="{Binding TotalInvestment, StringFormat='Initial Investment: {0:F2} $'}" />
+                        <Label HorizontalOptions="Center" Text="{Binding ValueToday, StringFormat='Value Today: {0:F2} $'}" />
+                        <Label HorizontalOptions="Center" Text="{Binding RoiRate, StringFormat='ROI Rate: {0:F2} %'}" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
 
         <CollectionView
             Grid.Row="2"
@@ -89,13 +102,13 @@
                                                 FontAttributes="Bold"
                                                 FontSize="20"
                                                 HorizontalOptions="End"
-                                                Text="{Binding InvestedAmmount, StringFormat='{0} $'}"
+                                                Text="{Binding InvestedAmmount, StringFormat='{0:F2} $'}"
                                                 VerticalOptions="Center" />
                                         </Grid>
                                     </CollectionView.Header>
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate x:DataType="viewModels:CoinDataViewModel">
-                                            <Grid ColumnDefinitions="100, *, *" RowDefinitions="20">
+                                            <Grid ColumnDefinitions="40, *, 100" RowDefinitions="20">
                                                 <Label
                                                     Grid.Column="0"
                                                     HorizontalOptions="Start"
@@ -104,14 +117,22 @@
 
                                                 <Label
                                                     Grid.Column="1"
-                                                    HorizontalOptions="End"
-                                                    Text="{Binding CoinAmmount, StringFormat='{0:F3}'}"
-                                                    VerticalOptions="Center" />
+                                                    HorizontalOptions="Fill"
+                                                    HorizontalTextAlignment="Center"
+                                                    LineBreakMode="NoWrap"
+                                                    VerticalOptions="Center">
+                                                    <Label.Text>
+                                                        <MultiBinding StringFormat="{}1 {0} = {1:F2}$">
+                                                            <Binding Path="CoinName" />
+                                                            <Binding Path="BuyingPrice" />
+                                                        </MultiBinding>
+                                                    </Label.Text>
+                                                </Label>
 
                                                 <Label
                                                     Grid.Column="2"
                                                     HorizontalOptions="End"
-                                                    Text="{Binding Value, StringFormat='{0:F2} $'}"
+                                                    Text="{Binding InvestmentValue, StringFormat='{0:F2} $'}"
                                                     VerticalOptions="Center" />
                                             </Grid>
                                         </DataTemplate>

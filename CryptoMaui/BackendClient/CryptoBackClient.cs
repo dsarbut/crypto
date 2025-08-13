@@ -12,4 +12,9 @@ public partial class CryptoBackClient
     {
             
     }
+
+    public void UpdateUrl (string url)
+    {
+        BaseUrl = url;
+    }
 }

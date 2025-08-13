@@ -39,20 +39,27 @@ public class TotalInvetmentsDto
 
     private static DcaDto ComputeDCA(string coninName, IEnumerable<InvestmentDto> investments)
     {
+        var orderedInvestmets = investments.OrderBy(x => x.Date);
+
         DcaDto dca = new()
         {
             CoinName = coninName,
         };
 
         decimal totalInvest = 0, totalCoin = 0;
-        foreach (var investment in investments)
+        foreach (var investment in orderedInvestmets)
         {
             totalInvest += investment.InvestmentValue;
-            totalCoin += investment.CoinAmmount;
+            totalCoin += (investment.InvestmentValue / investment.CoinPrice);
         }
 
+        dca.TotalInvestment = totalInvest;
+        dca.TotalCoin = totalCoin;
         dca.Dca = totalInvest / totalCoin;
 
+        dca.ValueToday = totalCoin * orderedInvestmets.Last().CoinPrice;
+
+        dca.Roi = ((dca.ValueToday - totalInvest) / totalInvest) * 100;
 
         return dca;
     }

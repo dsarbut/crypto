@@ -11,7 +11,7 @@
 
 
     <ShellContent ContentTemplate="{DataTemplate views:PortfolioPage}" Route="Portfolio" />
-    <ShellContent ContentTemplate="{DataTemplate views:AddInvestmentPage}" Route="AddInvestment" />
+
 
 
 </Shell>

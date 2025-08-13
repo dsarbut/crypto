@@ -18,7 +18,7 @@ namespace CryptoBack.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CoinAmmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    CoinPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     InvestmentValue = table.Column<decimal>(type: "TEXT", nullable: false),
                     CoinName = table.Column<string>(type: "TEXT", nullable: false)
                 },

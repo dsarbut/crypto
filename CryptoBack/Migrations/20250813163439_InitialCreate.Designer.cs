@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoBack.Migrations
 {
     [DbContext(typeof(InvestmentDatabase))]
-    [Migration("20250810122038_InitialCreate")]
+    [Migration("20250813163439_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -26,11 +26,11 @@ namespace CryptoBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("CoinAmmount")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("CoinName")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("CoinPrice")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")

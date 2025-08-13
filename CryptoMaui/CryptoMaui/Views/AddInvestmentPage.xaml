@@ -8,21 +8,16 @@
     Background="{StaticResource Primary}"
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="True" IsVisible="True" />
+    </Shell.BackButtonBehavior>
     <Grid
         Margin="16"
-        RowDefinitions="60, 60,  *, 44"
+        RowDefinitions="60, 60, 60,  *, 44"
         RowSpacing="20">
 
-        <VerticalStackLayout Grid.Row="0">
-            <Label HorizontalOptions="Fill" Text="Investment Ammount ($)" />
-            <Entry
-                FontSize="14"
-                Placeholder="Enter invested ammount"
-                Text="{Binding InvestedAmmount}" />
-        </VerticalStackLayout>
 
-
-        <VerticalStackLayout Grid.Row="1" HorizontalOptions="Start">
+        <VerticalStackLayout Grid.Row="0" HorizontalOptions="Start">
             <Label HorizontalOptions="Fill" Text="Select Start Date" />
             <DatePicker
                 Date="{Binding SelectedDate, Mode=TwoWay}"
@@ -32,8 +27,17 @@
                 WidthRequest="140" />
         </VerticalStackLayout>
 
+        <VerticalStackLayout Grid.Row="1">
+            <Label HorizontalOptions="Fill" Text="Investment Ammount ($)" />
+            <Entry
+                FontSize="14"
+                Placeholder="Enter invested ammount"
+                Text="{Binding InvestedAmmount}" />
+        </VerticalStackLayout>
+
+
         <CollectionView
-            Grid.Row="2"
+            Grid.Row="3"
             ItemSizingStrategy="MeasureAllItems"
             ItemsSource="{Binding CoinSelection.Items}"
             SelectionMode="None">
@@ -67,6 +71,11 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Button Grid.Row="3" Text="Invest" />
+        <Button
+            Grid.Row="4"
+            Command="{Binding InvestCommand}"
+            HorizontalOptions="Center"
+            Text="Invest"
+            WidthRequest="100" />
     </Grid>
 </ContentPage>

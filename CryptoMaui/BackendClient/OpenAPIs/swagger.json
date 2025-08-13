@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Coins/InstalledCoins": {
+    "/api/Coins/GetInstalledCoins": {
       "get": {
         "tags": [
           "Coins"
@@ -43,7 +43,7 @@
         }
       }
     },
-    "/api/Coins/CoinPrice": {
+    "/api/Coins/GetPriceHistory": {
       "get": {
         "tags": [
           "Coins"
@@ -65,7 +65,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/CoinPrice"
+                    "$ref": "#/components/schemas/CoinPriceDto"
                   }
                 }
               },
@@ -73,7 +73,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/CoinPrice"
+                    "$ref": "#/components/schemas/CoinPriceDto"
                   }
                 }
               },
@@ -81,7 +81,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/CoinPrice"
+                    "$ref": "#/components/schemas/CoinPriceDto"
                   }
                 }
               }
@@ -89,6 +89,86 @@
           },
           "404": {
             "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Coins/GetInvestments": {
+      "get": {
+        "tags": [
+          "Coins"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalInvetmentsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalInvetmentsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalInvetmentsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Coins/AddInvestment": {
+      "post": {
+        "tags": [
+          "Coins"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvestmentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvestmentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvestmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Content",
             "content": {
               "text/plain": {
                 "schema": {
@@ -119,17 +199,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginModel"
+                "$ref": "#/components/schemas/LoginDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginModel"
+                "$ref": "#/components/schemas/LoginDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginModel"
+                "$ref": "#/components/schemas/LoginDto"
               }
             }
           }
@@ -164,7 +244,7 @@
   },
   "components": {
     "schemas": {
-      "CoinPrice": {
+      "CoinPriceDto": {
         "required": [
           "date",
           "price"
@@ -182,7 +262,59 @@
         },
         "additionalProperties": false
       },
-      "LoginModel": {
+      "DcaDto": {
+        "type": "object",
+        "properties": {
+          "coinName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalInvestment": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalCoin": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "dca": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "valueToday": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "roi": {
+            "type": "number",
+            "format": "decimal"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InvestmentDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "coinPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "investmentValue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "coinName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginDto": {
         "required": [
           "password",
           "username"
@@ -226,6 +358,26 @@
           }
         },
         "additionalProperties": { }
+      },
+      "TotalInvetmentsDto": {
+        "type": "object",
+        "properties": {
+          "investments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvestmentDto"
+            },
+            "nullable": true
+          },
+          "dcas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DcaDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       }
     }
   }

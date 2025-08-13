@@ -23,11 +23,11 @@ namespace CryptoBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("CoinAmmount")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("CoinName")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("CoinPrice")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")

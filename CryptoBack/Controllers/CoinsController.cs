@@ -39,15 +39,16 @@ public class CoinsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<TotalInvetmentsDto> GetInvestments()
     {
+        investmentDatabase.Database.EnsureCreated();
+        
 
         IEnumerable<InvestmentDto> investments = investmentDatabase.Investments.Select
             (investment => new InvestmentDto()
             {
                 InvestmentValue = investment.InvestmentValue,
-                CoinAmmount = investment.CoinAmmount,
+                CoinPrice = investment.CoinPrice,
                 CoinName = investment.CoinName,
                 Date = investment.Date,
-                RepeatMonthly = false //don't care now
             });
 
         TotalInvetmentsDto rv = new (investments.ToArray());
@@ -56,25 +57,25 @@ public class CoinsController : ControllerBase
 
 
     [HttpPost("AddInvestment")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<ActionResult> AddInvestment([FromBody] InvestmentDto investment)
     {
         try
         {
             await investmentDatabase.Investments.AddAsync(new InvestmentModel()
             {
-                CoinAmmount = investment.CoinAmmount,
+                CoinPrice = investment.CoinPrice,
                 CoinName = investment.CoinName,
                 Date = investment.Date,
                 InvestmentValue = investment.InvestmentValue,
             });
             await investmentDatabase.SaveChangesAsync();
-            return Created();
-
+            return Ok();
         }
-        catch (Exception ex)
+        catch (Exception _)
         {
-            return NoContent();
+            return UnprocessableEntity();
         }
 
     }
