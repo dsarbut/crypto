@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace BackendClient;
 public partial class CryptoBackClient
 {
-    public CryptoBackClient(IBackendAddressResolver backendAddressResolver) : 
-        this (backendAddressResolver.BackendAddress, new HttpClient())
+    public CryptoBackClient(IBackendAddressResolver backendAddressResolver, HttpClientHandler httpClientHandler) : 
+        this (backendAddressResolver.BackendAddress, new HttpClient(httpClientHandler))
     {
-            
+
     }
 
     public void UpdateUrl (string url)

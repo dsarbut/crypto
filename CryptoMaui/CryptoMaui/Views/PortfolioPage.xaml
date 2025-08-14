@@ -3,6 +3,7 @@
     x:Class="CryptoMaui.Views.PortfolioPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:CryptoMaui.Converters"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:CryptoMaui.ViewModels"
     xmlns:views="clr-namespace:CryptoMaui.Views"
@@ -11,19 +12,27 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
-    <Grid Margin="16" RowDefinitions="200, *">
+    <ContentPage.Resources>
+        <converters:RoiToStringConverter x:Key="RoiStringConverter" />
+        <converters:RoiToColorConverter x:Key="RoiColorConverter" Gain="LawnGreen" />
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    </ContentPage.Resources>
 
-        <CollectionView
+    <Grid Margin="16" RowDefinitions="300, 10, *">
+        <CarouselView
             Grid.Row="0"
             Margin="0,50,0,0"
             Background="{StaticResource Primary}"
             HorizontalOptions="Center"
+            IndicatorView="indicator"
             ItemsSource="{Binding Dcas}"
+            Loop="False"
+            PeekAreaInsets="50"
             VerticalOptions="Center">
-            <CollectionView.ItemsLayout>
+            <CarouselView.ItemsLayout>
                 <LinearItemsLayout Orientation="Horizontal" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
+            </CarouselView.ItemsLayout>
+            <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:DcaViewModel">
                     <VerticalStackLayout HorizontalOptions="Fill">
                         <Label
@@ -39,11 +48,22 @@
                         <Label HorizontalOptions="Center" Text="{Binding Dca, StringFormat='Dca: {0:F3} $'}" />
                         <Label HorizontalOptions="Center" Text="{Binding TotalInvestment, StringFormat='Initial Investment: {0:F2} $'}" />
                         <Label HorizontalOptions="Center" Text="{Binding ValueToday, StringFormat='Value Today: {0:F2} $'}" />
-                        <Label HorizontalOptions="Center" Text="{Binding RoiRate, StringFormat='ROI Rate: {0:F2} %'}" />
+                        <Label
+                            HorizontalOptions="Center"
+                            Text="{Binding RoiRate, Converter={x:StaticResource RoiStringConverter}}"
+                            TextColor="{Binding RoiRate, Converter={x:StaticResource RoiColorConverter}}" />
                     </VerticalStackLayout>
                 </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <IndicatorView
+            x:Name="indicator"
+            Grid.Row="1"
+            HorizontalOptions="Center"
+            IndicatorColor="{x:StaticResource Gray300}"
+            IndicatorsShape="Square"
+            SelectedIndicatorColor="{x:StaticResource Tertiary}" />
 
 
         <CollectionView
@@ -52,14 +72,25 @@
             ItemSizingStrategy="MeasureAllItems"
             ItemsSource="{Binding Investments}">
             <CollectionView.Header>
-                <Label Margin="10" Text="Investments :" />
+                <Label
+                    Margin="10"
+                    IsVisible="{Binding HasItems}"
+                    Text="Investments:" />
             </CollectionView.Header>
             <CollectionView.EmptyView>
-                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Start">
+                    <ActivityIndicator
+                        BackgroundColor="Transparent"
+                        HeightRequest="40"
+                        IsRunning="{Binding IsLoading}"
+                        IsVisible="{Binding IsLoading}"
+                        WidthRequest="40"
+                        Color="{StaticResource Tertiary}" />
                     <Label
                         HorizontalOptions="Center"
+                        IsVisible="{Binding IsLoading, Converter={x:StaticResource InvertedBoolConverter}}"
                         Text="No investments in your portfolio. Add an investment."
-                        VerticalOptions="Center" />
+                        VerticalOptions="Start" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
@@ -137,11 +168,8 @@
                                             </Grid>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
-
                                 </CollectionView>
-
                             </Grid>
-
                         </Border>
                         <BoxView BackgroundColor="Transparent" HeightRequest="10" />
                     </VerticalStackLayout>

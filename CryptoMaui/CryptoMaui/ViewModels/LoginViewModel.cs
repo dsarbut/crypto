@@ -21,10 +21,14 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     public partial string BackendUrl { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsLoggingIn { get; set; } = false;
+
 
     [RelayCommand]
     private async Task LogIn()
     {
+        IsLoggingIn = true;
         try
         {
             cryptoBack.UpdateUrl(BackendUrl);
@@ -34,6 +38,8 @@ public partial class LoginViewModel : ObservableObject
                 Username = Username ?? "",
                 Password = Password ?? ""
             });
+
+            await Task.Delay(2000);
 
             await Shell.Current.GoToAsync("//Portfolio");
         }
@@ -52,6 +58,10 @@ public partial class LoginViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Connection failed.", ex.Message, "Cancel");
+        }
+        finally
+        {
+            IsLoggingIn = false;
         }
     }
 }

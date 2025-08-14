@@ -12,9 +12,15 @@ public partial class PortfolioViewModel : ObservableObject
     {
         this.cryptoBack = cryptoBack;
         Investments = [];
+        Dcas = [];
     }
 
+    [ObservableProperty]
+    public partial bool IsLoading { get; set; } = true;
 
+    public bool HasItems => Investments.Count > 0;
+
+    [NotifyPropertyChangedFor(nameof(HasItems))]
     [ObservableProperty]
     public partial ObservableCollection<InvestmentViewModel> Investments { get; set; }
 
@@ -29,8 +35,15 @@ public partial class PortfolioViewModel : ObservableObject
 
     public async Task LoadPortfolio()
     {
-
-        await RefreshInvestments();
+        IsLoading = true;
+        try
+        {
+            await RefreshInvestments();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     private async Task RefreshInvestments()

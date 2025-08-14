@@ -26,10 +26,10 @@ public class Program
             c.MapType<DateTime>(() => new OpenApiSchema { Type = "string", Format = "date" });
         });
 
-        builder.Services.AddDbContext<InvestmentDatabase>(o => o.UseInMemoryDatabase("TstDb"));
+        //builder.Services.AddDbContext<InvestmentDatabase>(o => o.UseInMemoryDatabase("TstDb"));
 
-        // var connectionString = "Data Source=Investments.db";
-        // builder.Services.AddSqlite<InvestmentDatabase>(connectionString);
+         var connectionString = "Data Source=Investments.db";
+         builder.Services.AddSqlite<InvestmentDatabase>(connectionString);
 
 
 
